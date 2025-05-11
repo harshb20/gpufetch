@@ -1,7 +1,5 @@
 use anyhow::{anyhow, Context, Result};
 use regex::Regex;
-use std::fs;
-use std::path::Path;
 use std::process::Command;
 
 use crate::gpu::common::{Cache, GpuInfo, GpuVendor, Memory, MemoryType, Topology};
@@ -38,8 +36,8 @@ pub fn detect_nvidia_gpus() -> Result<Vec<GpuInfo>> {
         let name = fields[0];
         let driver_version = fields[1];
         let memory_total = fields[2];
-        let pci_bus_id = fields[3];
-        let performance_state = fields[4];
+        let _pci_bus_id = fields[3]; // Unused but kept for clarity
+        let _performance_state = fields[4]; // Unused but kept for clarity
         let max_clock = fields[5];
         let current_clock = fields[6];
         
