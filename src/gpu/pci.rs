@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Context, Result};
 use lazy_static::lazy_static;
-use pci_ids::{Device, FromId, SubClass, Vendor};
+use pci_ids::{Device, FromId, Subclass, Vendor};
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -124,16 +124,20 @@ fn create_gpu_info_from_pci(pci_info: &PciInfo, device_path: &Path) -> Option<Gp
     
     // Try to get device name from pci.ids database
     let vendor_info = Vendor::from_id(pci_info.vendor_id);
-    let device_info = Device::from_id(pci_info.vendor_id, pci_info.device_id);
     
-    let name = match (vendor_info, device_info) {
-        (Some(v), Some(d)) => format!("{} {}", v.name(), d.name()),
-        (Some(v), None) => format!("{} Device {:04x}", v.name(), pci_info.device_id),
-        (None, _) => format!("Unknown Device {:04x}:{:04x}", pci_info.vendor_id, pci_info.device_id),
+    // Handle the different API for the pci-ids crate
+    let device_name = if let Some(v) = vendor_info {
+        if let Some(d) = v.devices().find(|d| d.id() == pci_info.device_id) {
+            format!("{} {}", v.name(), d.name())
+        } else {
+            format!("{} Device {:04x}", v.name(), pci_info.device_id)
+        }
+    } else {
+        format!("Unknown Device {:04x}:{:04x}", pci_info.vendor_id, pci_info.device_id)
     };
     
     // Create basic GPU info
-    let mut gpu_info = GpuInfo::new(&name, vendor);
+    let mut gpu_info = GpuInfo::new(&device_name, vendor);
     gpu_info.pci_info = Some(pci_info.clone());
     
     // Try to read some additional info from sysfs
