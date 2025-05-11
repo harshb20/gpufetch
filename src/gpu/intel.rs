@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result};
 use regex::Regex;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -82,7 +82,7 @@ fn get_intel_gpu_info_from_sysfs(device_path: &Path) -> Result<GpuInfo> {
     gpu_info.memory = get_intel_memory(&name);
     
     // Try to get topology information
-    gpu_info.topology = get_intel_topology(&name, &device_id, generation);
+    gpu_info.topology = get_intel_topology(&name, generation);
     
     // Try to get cache information
     gpu_info.cache = get_intel_cache(&name, generation);
@@ -427,7 +427,7 @@ fn get_intel_memory(name: &str) -> Option<Memory> {
 }
 
 /// Get topology information for Intel GPUs
-fn get_intel_topology(name: &str, device_id: &str, generation: u32) -> Option<Topology> {
+fn get_intel_topology(name: &str, generation: u32) -> Option<Topology> {
     let name_lower = name.to_lowercase();
     
     let execution_units = if name_lower.contains("iris xe") && name_lower.contains("96") {
