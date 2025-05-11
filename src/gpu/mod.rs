@@ -5,7 +5,7 @@ pub mod intel;
 pub mod nvidia;
 
 use anyhow::{Context, Result};
-use common::{GpuInfo, GpuVendor};
+use common::GpuInfo;
 
 /// Manager for GPU detection and information gathering
 pub struct GpuManager {
