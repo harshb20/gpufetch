@@ -155,7 +155,7 @@ fn get_amd_gpu_info_from_sysfs(device_path: &Path) -> Result<GpuInfo> {
     }
     
     // Try to get topology information
-    gpu_info.topology = get_amd_topology(&name, &device_id);
+    gpu_info.topology = get_amd_topology(&name);
     
     // Try to get cache information
     gpu_info.cache = get_amd_cache(&name);
@@ -336,7 +336,7 @@ fn get_amd_bus_width(name: &str) -> u32 {
 }
 
 /// Get topology information for AMD GPUs
-fn get_amd_topology(name: &str, device_id: &str) -> Option<Topology> {
+fn get_amd_topology(name: &str) -> Option<Topology> {
     let name_lower = name.to_lowercase();
     
     let stream_processors = if name_lower.contains("rx 7900 xtx") {
