@@ -61,7 +61,7 @@
 
 2. Clone the repository:
    ```
-   git clone https://github.com/yourusername/gpufetch.git
+   git clone https://github.com/harshb20/gpufetch.git
    cd gpufetch
    ```
 
